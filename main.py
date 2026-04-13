@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from ag_ui_adk import ADKAgent, add_adk_fastapi_endpoint
 
-from agents.agent import lab_agent
+from agents.callback_agent.agent import lab_agent
 
 load_dotenv()
 

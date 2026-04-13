@@ -1,17 +1,17 @@
 import logging
-from google.adk.agents import LlmAgent
+
 from google.genai import types
+from google.adk.agents import LlmAgent
 from google.adk.planners import BuiltInPlanner
 
 from .hooks.track_actions import track_tools_callback, track_actions_callback
-from .tools import mcps, builtin
+from .tools import mcps
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s | %(levelname)s | %(name)s | %(message)s'
 )
 logger = logging.getLogger(__name__)
-logging.getLogger("google_adk.google.adk.tools.base_authenticated_tool").setLevel(logging.ERROR)
 
 lab_agent = LlmAgent(
     name = "lab_agent",
@@ -25,17 +25,16 @@ lab_agent = LlmAgent(
         - Buscar novas documentações e informações sobre desenvolvimento de software;
         - Responder perguntas sobre conhecimento geral.
     """,
-    tools=[mcps.context7, builtin.read_context],
+    tools=[mcps.context7],
     generate_content_config=types.GenerateContentConfig(
         temperature=None,
         max_output_tokens=None,        
     ),
-    # planner=BuiltInPlanner(
-    #     thinking_config=types.ThinkingConfig(
-    #         thinking_budget=250,
-    #         include_thoughts=True
-    #     )
-    # ),
+    planner=BuiltInPlanner(
+        thinking_config=types.ThinkingConfig(
+            include_thoughts=True
+        )
+    ),
     after_tool_callback=track_tools_callback,
     after_model_callback=track_actions_callback
 )
