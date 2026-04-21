@@ -5,10 +5,12 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "google-adk>=1.28",
+    "google-adk>=1.31",
+    "google-adk[extensions]",
     "google-cloud-aiplatform[agent-engines]>=1.118.0",
     "python-dotenv>=1.1.1",
     "fastapi>=0.118.3",
     "ag-ui-adk>=0.3.2",
     "uvicorn>=0.37.0",
+    "litellm>=1.65.5",
 ]
