@@ -22,6 +22,19 @@ Durante a conversa, o agente:
 - consulta documentação atual via `context7`;
 - pode interagir com o GitHub MCP para contexto adicional e operações relacionadas ao repositório.
 
+## Exposição via A2A
+
+Além de rodar como agente ADK local, o `skill_agent` agora expõe um agent card gerado automaticamente pelo ADK.
+
+Esse agent card descreve o agente e permite que outros agentes o consumam via Agent2Agent Protocol. O `a2a_agent`, por exemplo, usa a URL do agent card para criar um `RemoteA2aAgent` e atuar como proxy para o `skill_agent`.
+
+O A2A é um protocolo aberto para comunicação entre agentes. Ele é mais adequado quando o agente remoto roda como serviço separado, precisa ser consumido por outro processo ou deve manter um contrato claro de interoperabilidade. No ADK, o agente produtor é exposto como serviço A2A, enquanto o consumidor usa o agent card para descobrir e acessar o agente remoto.
+
+Referências:
+
+- [Introdução a A2A no ADK](https://adk.dev/a2a/intro/)
+- [Documentação oficial do A2A Protocol](https://a2a-protocol.org/latest/)
+
 ## Skill carregada
 
 O agente carrega a skill local:
@@ -44,19 +57,23 @@ O agente utiliza:
 
 O `github_mcp` depende da variável de ambiente `GITHUB_PAT` para autenticação no endpoint configurado.
 
-## Modelo
+## Modelo e A2A
 
-O agente utiliza `gemini-2.5-flash`.
+Por padrão, o agente usa o fallback configurado no código. Para selecionar um modelo Gemini, defina `SKILL_AGENT_MODEL`.
+
+A porta do serviço A2A é configurada por `SKILL_AGENT_A2A_PORT`.
 
 ## Variáveis de ambiente
 
-Consulte o arquivo [.env.example](/Users/amorelliaoyan/projects/personal/lab/lab-agent/agents/skill_agent/.env.example).
+Consulte o arquivo [.env.example](.env.example).
 
 Variáveis esperadas:
 
 ```dotenv
 GOOGLE_API_KEY=
 GITHUB_PAT=
+SKILL_AGENT_MODEL=
+SKILL_AGENT_A2A_PORT=8001
 ```
 
 ## Execução
@@ -68,6 +85,14 @@ adk web agents
 ```
 
 Depois, selecione `skill_agent`.
+
+Para expor o agent card A2A, execute o agente como serviço A2A na porta definida por `SKILL_AGENT_A2A_PORT`. O `a2a_agent` deve ser configurado com a URL do agent card gerado.
+
+## Segurança e configuração
+
+Não versione arquivos `.env` com valores reais. Use apenas `.env.example` para documentar variáveis.
+
+Secrets como `GOOGLE_API_KEY` e `GITHUB_PAT` devem ficar somente no ambiente local ou no gerenciador de secrets do ambiente de execução.
 
 ## Observação formal
 
