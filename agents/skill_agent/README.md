@@ -86,7 +86,24 @@ adk web agents
 
 Depois, selecione `skill_agent`.
 
-Para expor o agent card A2A, execute o agente como serviço A2A na porta definida por `SKILL_AGENT_A2A_PORT`. O `a2a_agent` deve ser configurado com a URL do agent card gerado.
+### Servidor A2A
+
+Para expor o agent card A2A, execute o agente como serviço A2A na porta definida por `SKILL_AGENT_A2A_PORT`.
+
+Execute a partir do diretório `agents/`, para que o módulo `skill_agent.agent` seja resolvido corretamente:
+
+```bash
+cd agents
+uv run uvicorn skill_agent.agent:a2a_app --host localhost --port "${SKILL_AGENT_A2A_PORT:-8001}"
+```
+
+O agent card ficará disponível na rota padrão do A2A:
+
+```text
+http://localhost:8001/.well-known/agent-card.json
+```
+
+Configure o `a2a_agent` com essa URL em `A2A_AGENT_CARD_URL`.
 
 ## Segurança e configuração
 
